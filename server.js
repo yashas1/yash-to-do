@@ -2,15 +2,24 @@ var express = require('express');
 
 var auto =express();
 var port =process.env.PORT || 3000;
+var bodyparser =require('body-parser'); 
+var todo=[];
+var todoid=1;
 
-var todo=[{id:1,description:"meet the ppl",completed:false},{
+
+auto.use(bodyparser.json());
     
-    id:2,description:"take the bath",completed:false},{id:3,description:"meet the friendsl",completed:true}
-   
-]
+auto.post('/todos',function(req,res){
+    var body = req.body;
+    body.id=todoid++;
+    body.yet="open";
+    todo.push(body);
+   console.log(body);
+    res.json(body);
+})
 
 auto.get('/todos/:id',function(req,res){
-    var todoid = parseInt(req.params.id);
+    var todoid = parseInt(req.params.id,10);
     var mathcedid;
     
     todo.forEach(function(todos){
