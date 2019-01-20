@@ -5,7 +5,7 @@ var port =process.env.PORT || 3000;
 var bodyparser =require('body-parser'); 
 var todo=[];
 var todoid=1;
-
+var _ = require('underscore');
 
 auto.use(bodyparser.json());
     
@@ -19,21 +19,58 @@ auto.post('/todos',function(req,res){
 })
 
 auto.get('/todos/:id',function(req,res){
+    var todoid = parseInt(req.params.id);
+    var mathcedid =_.findWhere(todo,{id:todoid});
+    
+
+   res.json(mathcedid);
+    
+//       var todoid = parseInt(req.params.id,10);
+//    var mathcedid =_.findWhere(todo,{id:todoid});
+//    todo =_.without(todo,mathcedid);
+//console.log(todo);
+//   res.json(mathcedid);
+//    
+    
+})
+
+
+auto.delete('/todos/:id',function(req,res){
     var todoid = parseInt(req.params.id,10);
-    var mathcedid;
-    
-    todo.forEach(function(todos){
-        
-        if(todoid==todos.id)
-{
-    mathcedid=todos; 
-    
-}
-        
-    })
+    var mathcedid =_.findWhere(todo,{id:todoid});
+    todo =_.without(todo,mathcedid);
+console.log(todo);
    res.json(mathcedid);
     
 })
+
+
+auto.put('/todos/:id',function(req,res){
+     var body = req.body;
+    var todoid = parseInt(req.params.id,10);
+    var mathcedid =_.findWhere(todo,{id:todoid});
+    var changed ={};
+  
+    if(body.hasOwnProperty("disription")){
+    changed.discription=body.discription;
+   
+       }
+    if(body.hasOwnProperty("completed")){
+        
+        changed.completed=body.completed; 
+        
+    }
+    
+     console.log(changed);
+    _.extend(mathcedid,changed);
+
+
+
+   res.json(mathcedid);
+    
+})
+
+
 
 auto.get('/todos',function(req,res){
     
