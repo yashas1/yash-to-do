@@ -14,7 +14,7 @@ auto.post('/todos',function(req,res){
     body.id=todoid++;
     body.yet="open";
     todo.push(body);
-   console.log(body);
+//   console.log(body);
     res.json(body);
 })
 
@@ -61,7 +61,7 @@ auto.put('/todos/:id',function(req,res){
         
     }
     
-     console.log(changed);
+//     console.log(changed);
     _.extend(mathcedid,changed);
 
 
@@ -74,11 +74,48 @@ auto.put('/todos/:id',function(req,res){
 
 auto.get('/todos',function(req,res){
     
-    res.json(todo);
+     var queryp=req.query;
+    console.log(queryp);
+    var filterdto=todo;
+    var x=[];
+    if(queryp.hasOwnProperty("completed") && queryp.completed==="true")
+    {
+        console.log(filterdto);
+        
+        filterdto=_.where(filterdto,{completed:"true"});
+        
+    }
+     else if(queryp.hasOwnProperty("completed") && queryp.completed==="false")
+    {
+//        var mathcedid =_.findWhere(todo,{id:todoid});
+//    todo =_.without(todo,mathcedid);
+        
+      filterdto = _.where(filterdto, {completed:"false"});
+            
+        }
+        
+    if(queryp.hasOwnProperty("q") && queryp.q.length>0)  
+        {
+            filterdto = _.filter(filterdto,function(x){
+                
+                console.log(x.discription.indexOf(queryp.q));
+                return x.discription.indexOf(queryp.q)>-1;                
+            })
+            
+            
+        }
+    
+    
+      res.json(filterdto);  
+    
+    
+    
     
 })
 
 auto.get('/',function(req,res){
+    
+   
     
     res.send("yashs");
     
